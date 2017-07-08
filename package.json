@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "4.0.0-alpha.6",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-transition-group": "2.0.2",
+    "reactstrap": "4.8.0"
   },
   "devDependencies": {
     "react-scripts": "1.0.10"
   },
   "engines": {
-		"node": "6.11.0"
-	},
+    "node": "6.11.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

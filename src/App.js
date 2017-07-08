@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Button } from 'reactstrap';
 
 class App extends Component {
   render() {
@@ -16,6 +17,17 @@ class App extends Component {
         <p>
           Okay, did that.
         </p>
+				<p>
+					<Button
+						tag="a"
+						color="success"
+						size="large"
+						href="http://reactstrap.github.io"
+						target="_blank"
+					>
+						View Reactstrap Docs
+					</Button>
+				</p>
       </div>
     );
   }
