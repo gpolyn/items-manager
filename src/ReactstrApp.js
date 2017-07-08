@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Card } from 'reactstrap';
+import { List, Map, Record } from 'immutable';
+import { CardTitle, CardSubtitle, Card, CardBlock, Button } from 'reactstrap';
 
-const ProductCategoryRow = (props, context) =>
-	<tr><th colSpan="2">{props.category}</th></tr>
+const ProductCategoryButton = (props, context) =>
+	<Button size="sm">{props.category}</Button>
 
 const ProductRow = (props, context) => {
 
@@ -13,10 +14,12 @@ const ProductRow = (props, context) => {
 		</span>;
 
 	return (
-		<tr>
-			<td>{name}</td>
-			<td>{props.product.price}</td>
-		</tr>
+		<Button>
+      <Card>
+        <CardTitle>{name}</CardTitle>
+        <CardSubtitle>{props.product.price}</CardSubtitle>
+      </Card>
+		</Button>
 	);
 }
 
@@ -24,26 +27,17 @@ const ProductTable = (props, context) => {
     const rows = [];
     let lastCategory = null;
     props.products.forEach((product) => {
-      if (product.name.indexOf(props.filterText) === -1 || (!product.stocked && props.inStockOnly)) {
+      if (product.get('name').indexOf(props.filterText) === -1 || (!product.get('stocked') && props.inStockOnly)) {
         return;
       }
-      if (product.category !== lastCategory) {
-        rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
-      }
-      rows.push(<ProductRow product={product} key={product.name} />);
+      rows.push(<ProductRow product={product.toJS()} key={product.get('name')} />);
       lastCategory = product.category;
     });
 
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
+      <div className='container-fluid'>
+        {rows}
+      </div>
     );
 }
 
@@ -118,7 +112,7 @@ export class FilterableProductTable extends Component {
   }
 }
 
-export const PRODUCTS = [
+const mutableProducts = [
   {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
   {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
   {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
@@ -126,3 +120,7 @@ export const PRODUCTS = [
   {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
   {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
 ];
+
+export const PRODUCTS = List(mutableProducts.map( product => { return Map(product); } ));
+//export const PRODUCTS = List(mutableProducts.map( product => { return Record(product); } ));
+// export const PRODUCTS = List(mutableProducts);
