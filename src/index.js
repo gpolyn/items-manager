@@ -10,7 +10,8 @@ import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import reducer from './reducers'
 const store = createStore(reducer,{
-  items: MUTABLE_PRODUCTS
+  // items: MUTABLE_PRODUCTS
+  items: PRODUCTS
 })
 
 /*

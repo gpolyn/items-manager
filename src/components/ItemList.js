@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Item from './Item'
+import { List } from 'immutable';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const ItemList = ({ items, onItemClick }) => {
   console.log(items);
@@ -9,9 +11,13 @@ const ItemList = ({ items, onItemClick }) => {
     <div className='container-fluid'>
       {items.map(item =>
         <Item
-          key={item.id}
-          {...item}
-          onClick={() => onItemClick(item.id)}
+          key={item.get('id')}
+          price={item.get('price')}
+          category={item.get('category')}
+          id={item.get('id')}
+          name={item.get('name')}
+          onClick={() => onItemClick(item.get('id'))}
+          selected={item.get('selected')}
         />
       )}
     </div>
@@ -20,7 +26,7 @@ const ItemList = ({ items, onItemClick }) => {
 }
 
 ItemList.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
+  items: ImmutablePropTypes.listOf(ImmutablePropTypes.contains({
     selected: PropTypes.bool,
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
