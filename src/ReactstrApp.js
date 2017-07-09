@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { List, Map, Record } from 'immutable';
+import { List, Map, fromJS } from 'immutable';
 import { CardTitle, CardSubtitle, Card, CardBlock, Button } from 'reactstrap';
 
 const ProductCategoryButton = (props, context) =>
 	<Button size="sm">{props.category}</Button>
 
-const ProductRow = (props, context) => {
+const ProductButton = (props, context) => {
+
+  const selectionColor = () => {
+    return props.product.isActive ? "primary" : "secondary"; 
+  };
 
 	const name = props.product.stocked ?
 		props.product.name :
@@ -14,7 +18,10 @@ const ProductRow = (props, context) => {
 		</span>;
 
 	return (
-		<Button>
+		<Button 
+      onClick={() => props.onSelection(props.product)}
+      color={selectionColor()}
+      >
       <Card>
         <CardTitle>{name}</CardTitle>
         <CardSubtitle>{props.product.price}</CardSubtitle>
@@ -24,19 +31,20 @@ const ProductRow = (props, context) => {
 }
 
 const ProductTable = (props, context) => {
-    const rows = [];
+    const buttons = [];
     let lastCategory = null;
+    console.log(props.products.toJSON())
     props.products.forEach((product) => {
-      if (product.get('name').indexOf(props.filterText) === -1 || (!product.get('stocked') && props.inStockOnly)) {
+      if (product.get('name').indexOf(props.filterText) === -1 || (!product.get('stocked') && props.inStockOnly) || !product.get('categoryIsSelected') ) {
         return;
       }
-      rows.push(<ProductRow product={product.toJS()} key={product.get('name')} />);
+      buttons.push(<ProductButton {...props} product={product.toJS()} key={product.get('name')} />);
       lastCategory = product.category;
     });
 
     return (
       <div className='container-fluid'>
-        {rows}
+        {buttons}
       </div>
     );
 }
@@ -45,14 +53,34 @@ const SearchBar = (props, context) => {
   
   const handleFilterTextInputChange = (e) => {
     props.onFilterTextInput(e.target.value);
-  }
+  };
   
   const handleInStockInputChange = (e) => {
     props.onInStockInput(e.target.checked);
+  };
+
+  const categoryButtons = [];
+
+  const categories = new Set(props.products.map( product => { 
+    return product.get('category'); 
+  }));
+
+  const getButton = (category) => {
+    return (<Button 
+            onClick={() => props.onSelection(category)}
+            key={category}
+            >{category}</Button>);
   }
+
+  categories.forEach( category => {
+    categoryButtons.push(getButton(category))
+  });
   
 	return (
 		<form>
+      <div>
+        {categoryButtons}
+      </div>
 			<input
 				type="text"
 				placeholder="Search..."
@@ -77,13 +105,45 @@ export class FilterableProductTable extends Component {
     super(props);
     this.state = {
       filterText: '',
-      inStockOnly: false
+      inStockOnly: false,
+      products: props.products
     };
   }
 
   handleFilterTextInput = (filterText) => {
     this.setState({
       filterText: filterText
+    });
+  }
+
+  handleCategorySelection = (e) => {
+    console.log('handleCategorySelection');
+    const products = this.state.products;
+    const list = products.map( product => {
+      if ( product.get('category') === e ) {
+        return product.set('categoryIsSelected', !product.get('categoryIsSelected'));
+      }
+      return product;
+    });
+    console.log('updating state with', list.toJSON())
+    this.setState({
+      products: list
+    });
+  }
+
+  handleSelection = (e) => {
+    const products = this.state.products;
+    const idx = products.findIndex( product => { return e.name === product.get('name') })
+    const list = products.update(idx, item => { 
+      if (item.get('isActive') === true) {
+        return item.set('isActive', false);
+      } else {
+        return item.set('isActive', true);
+      }
+    });
+
+    this.setState({
+      products: list
     });
   }
   
@@ -101,9 +161,12 @@ export class FilterableProductTable extends Component {
           inStockOnly={this.state.inStockOnly}
           onFilterTextInput={this.handleFilterTextInput}
           onInStockInput={this.handleInStockInput}
+          products={this.props.products}
+          onSelection={this.handleCategorySelection}
         />
         <ProductTable
-          products={this.props.products}
+          products={this.state.products}
+          onSelection={this.handleSelection}
           filterText={this.state.filterText}
           inStockOnly={this.state.inStockOnly}
         />
@@ -121,6 +184,4 @@ const mutableProducts = [
   {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
 ];
 
-export const PRODUCTS = List(mutableProducts.map( product => { return Map(product); } ));
-//export const PRODUCTS = List(mutableProducts.map( product => { return Record(product); } ));
-// export const PRODUCTS = List(mutableProducts);
+export const PRODUCTS = fromJS(mutableProducts);
