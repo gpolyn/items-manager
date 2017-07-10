@@ -5,7 +5,6 @@ import { List } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const ItemList = ({ items, onItemClick }) => {
-  console.log(items);
 
   return (
     <div className='container-fluid'>

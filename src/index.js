@@ -5,21 +5,16 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './components/App';
 
-import { FilterableProductTable, PRODUCTS, MUTABLE_PRODUCTS } from './ReactstrApp';
+import { FilterableProductTable, PRODUCTS, CATEGORIES } from './ReactstrApp';
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
-import reducer from './reducers'
+import reducer, {categories} from './reducers'
+import { fromJS } from 'immutable';
+
 const store = createStore(reducer,{
-  // items: MUTABLE_PRODUCTS
+  categories: fromJS(categories(PRODUCTS).map(product => { return {name: product, selected: true}})),
   items: PRODUCTS
 })
-
-/*
-ReactDOM.render(
-  <FilterableProductTable products={PRODUCTS} />,
-  document.getElementById('root')
-);
-*/
 
 ReactDOM.render(
 	<Provider store={store}>

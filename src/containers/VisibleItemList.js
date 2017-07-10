@@ -2,10 +2,20 @@ import { connect } from 'react-redux'
 import { toggleItem } from '../actions'
 import ItemList from '../components/ItemList'
 
-const getVisibleItems = (items, filter) => {
+const getVisibleItems = (state, filter) => {
+  const { items, categories } = state;
+  const selectedCategories = categories.filter(category => { return category.get('selected');})
+  console.log(selectedCategories.toJSON());
+  const filteredItems = items.filter(item => {
+    const idx = selectedCategories.findIndex( cat => cat.get('name') === item.get('category'))
+    if (idx > -1) {
+      return item;
+    }
+  })
+  console.log('filteredItems', filteredItems.toJSON())
   switch (filter) {
     case 'SHOW_ALL':
-      return items
+      return filteredItems
     case 'SHOW_SELECTED':
       return items.filter(t => t.selected)
     default:
@@ -15,7 +25,7 @@ const getVisibleItems = (items, filter) => {
 
 const mapStateToProps = (state) => ({
   // items: getVisibleItems(state.items, state.visibilityFilter)
-  items: getVisibleItems(state.items, 'SHOW_ALL')
+  items: getVisibleItems(state, 'SHOW_ALL')
 })
 
 const mapDispatchToProps = {
