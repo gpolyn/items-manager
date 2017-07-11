@@ -4,14 +4,15 @@ import ItemList from '../components/ItemList'
 
 const getVisibleItems = (state, filter) => {
   const { items, categories } = state;
-  const selectedCategories = categories.filter(category => { return category.get('selected');})
+  const selectedCategories = categories.filter(category => category.get('selected'))
   const filteredItems = items.filter(item => {
     const idx = selectedCategories.findIndex( cat => cat.get('name') === item.get('category'))
+    let retVal;
     if (idx > -1) {
-      return item;
+      retVal = item;
     }
+    return retVal;
   })
-  console.log('filteredItems', filteredItems.toJSON())
   switch (filter) {
     case 'SHOW_ALL':
       return filteredItems
