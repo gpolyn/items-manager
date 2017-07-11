@@ -5,11 +5,13 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './components/App';
 
-import { FilterableProductTable, PRODUCTS, CATEGORIES } from './ReactstrApp';
+import items from './items.json'
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import reducer, {categories} from './reducers'
 import { fromJS } from 'immutable';
+
+const PRODUCTS = fromJS(items);
 
 const store = createStore(reducer,{
   categories: fromJS(categories(PRODUCTS).map(product => { return {name: product, selected: true}})),
