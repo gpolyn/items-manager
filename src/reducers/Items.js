@@ -1,11 +1,15 @@
+const blah = (str, state, action) => {
+  return state.map(item =>
+    (item.get(str) === action[str]) 
+      ? item.set('selected', !item.get('selected'))
+      : item
+  )
+}
+
 export const items = (state = [], action) => {
   switch (action.type) {
     case 'TOGGLE_ITEM':
-      return state.map(item =>
-        (item.get('id') === action.id) 
-          ? item.set('selected', !item.get('selected'))
-          : item
-      )
+      return blah('id', state, action)
     default:
       return state
   }
@@ -14,26 +18,20 @@ export const items = (state = [], action) => {
 export const categories = (state = [], action) => {
   switch (action.type) {
     case 'TOGGLE_ITEM_CATEGORY':
-      return state.map(item =>
-        (item.get('name') === action.name) 
-          ? item.set('selected', !item.get('selected'))
-          : item
-      )
+      return blah('name', state, action)
     default:
       return state
   }
 }
 
-// http://redux.js.org/docs/recipes/reducers/ReusingReducerLogic.html
-export const createToggleWithNamedType = (name = '') => {
+// trash
+export const createToggle = () => {
   return (state = [], action) => {
     switch (action.type) {
-      case `TOGGLE_${name}`:
-        return state.map(item =>
-          (item.get('id') === action.id) 
-            ? item.set('selected', !item.get('selected'))
-            : item
-        )
+      case `TOGGLE_ITEM`:
+        return blah('id', state, action)
+      case `TOGGLE_ITEM_CATEGORY`:
+        return blah('name', state, action)
       default:
         return state
     }
