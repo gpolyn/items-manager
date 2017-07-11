@@ -5,7 +5,6 @@ import ItemList from '../components/ItemList'
 const getVisibleItems = (state, filter) => {
   const { items, categories } = state;
   const selectedCategories = categories.filter(category => { return category.get('selected');})
-  console.log(selectedCategories.toJSON());
   const filteredItems = items.filter(item => {
     const idx = selectedCategories.findIndex( cat => cat.get('name') === item.get('category'))
     if (idx > -1) {
@@ -24,17 +23,12 @@ const getVisibleItems = (state, filter) => {
 }
 
 const mapStateToProps = (state) => ({
-  // items: getVisibleItems(state.items, state.visibilityFilter)
   items: getVisibleItems(state, 'SHOW_ALL')
 })
 
-const mapDispatchToProps = {
-  onItemClick: toggleItem
-}
-
 const VisibleItemList = connect(
   mapStateToProps,
-  mapDispatchToProps
+  {onItemClick: toggleItem}
 )(ItemList)
 
 export default VisibleItemList;
