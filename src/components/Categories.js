@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Category from './Category'
-import { List } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const CategoryList = ({ categories, onCategoryClick }) => {

@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Item from './Item'
-import { List } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const ItemList = ({ items, onItemClick }) => {
@@ -29,7 +28,6 @@ ItemList.propTypes = {
     selected: PropTypes.bool,
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    stocked: PropTypes.bool,
     category: PropTypes.string,
     price: PropTypes.number.isRequired
   }).isRequired).isRequired,
